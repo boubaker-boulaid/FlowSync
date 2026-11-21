@@ -1,0 +1,3 @@
+# MVP excludes human tasks and approval gates
+
+The blueprint showcases four use cases. The MVP covers only three: e-commerce order-to-delivery, lead follow-up and support triage (which brings the Delay node into scope). Employee onboarding/offboarding is deferred to v1.1. It needs approval gates, human checklist tracking and an audit trail, which together form a human-in-the-loop subsystem: suspending an Execution on a person, a task inbox, approval permissions and audit records. That would roughly double the engine's surface for a single demo, while the other three use cases exercise the core engine with no new subsystems.

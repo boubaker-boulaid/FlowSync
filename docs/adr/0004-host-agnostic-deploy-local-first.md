@@ -1,0 +1,3 @@
+# Host-agnostic deployment; local-first release
+
+FlowSync needs several long-running processes (PHP-FPM, Horizon, scheduler, Reverb, MySQL, Redis, Sandbox), which free web-service hosts can't run because they put apps to sleep and offer no workers. There is no budget for a paid VPS, so deployment is a single provider-neutral `compose.prod.yaml` with images built in CI. The first release is the repository itself: a one-command local setup, a recorded walkthrough, and a Cloudflare Tunnel for live interviews. A public host (Oracle Cloud Always Free, or a VPS paid for with student credits) is attempted at Release A but is not on the critical path.
