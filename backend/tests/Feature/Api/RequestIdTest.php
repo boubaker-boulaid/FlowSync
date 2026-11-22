@@ -16,7 +16,7 @@ it('generates a request id when none is sent', function () {
 });
 
 it('keeps a well-formed request id sent by the client', function () {
-    $requestId = 'req_'. Str::ulid();
+    $requestId = 'req_'.Str::ulid();
 
     $response = withHeader('X-Request-Id', $requestId)->get('/up');
 
