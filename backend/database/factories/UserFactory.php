@@ -30,7 +30,18 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'is_demo' => false,
         ];
+    }
+
+    /**
+     * Indicate that the user is a temporary demo visitor.
+     */
+    public function demo(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_demo' => true,
+        ]);
     }
 
     /**
