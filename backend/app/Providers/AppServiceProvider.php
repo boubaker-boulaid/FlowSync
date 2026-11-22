@@ -26,8 +26,8 @@ class AppServiceProvider extends ServiceProvider
             return $this->char($name, 26)->charset('ascii')->collation('ascii_bin');
         });
 
-        // use in development throws exception in case of lazy loading and trying to fill a field thats not in fillable 
-        // or when trying to read an attribute that wasnt selected 
+        // use in development throws exception in case of lazy loading and trying to fill a field thats not in fillable
+        // or when trying to read an attribute that wasnt selected
         Model::shouldBeStrict(! app()->isProduction());
     }
 }

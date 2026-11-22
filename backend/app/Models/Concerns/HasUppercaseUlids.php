@@ -9,8 +9,8 @@ trait HasUppercaseUlids
 {
     use HasUlids;
 
-    // overrides newUniqueId() from HasUlids to return uppercase ids 
-    public function newUniqueId(): string 
+    // overrides newUniqueId() from HasUlids to return uppercase ids
+    public function newUniqueId(): string
     {
         return (string) Str::ulid();
     }

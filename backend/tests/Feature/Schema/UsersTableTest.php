@@ -7,13 +7,12 @@ use Illuminate\Support\Str;
 
 it('rejects a second user with the same email', function () {
     User::factory()->create([
-        'email' => 'samemail@gmail.com'
+        'email' => 'samemail@gmail.com',
     ]);
     User::factory()->create([
-        'email' => 'samemail@gmail.com'
+        'email' => 'samemail@gmail.com',
     ]);
 })->throws(UniqueConstraintViolationException::class);
-
 
 it('defaults is_demo to false', function () {
     $id = (string) Str::ulid();
