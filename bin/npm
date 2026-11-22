@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Runs: docker compose exec frontend npm <args>
+set -euo pipefail
+cd "$(dirname "$0")/.."
+# Allocate a TTY only when we have one (keeps colours locally, works in scripts and CI)
+tty_flag=()
+[ -t 0 ] && [ -t 1 ] || tty_flag=(-T)
+exec docker compose exec "${tty_flag[@]}" frontend npm "$@"

@@ -1,1 +1,9 @@
 /planning
+
+# Secrets: only the .env.example files go in Git
+/.env
+/backend/.env
+
+# Dependencies
+/backend/vendor/
+/frontend/node_modules/
