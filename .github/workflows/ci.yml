@@ -1,0 +1,142 @@
+name: CI
+
+# Run CI on pull requests and pushes targeting main
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Backend Job: Tests Laravel, Pint code style, and Larastan static analysis
+  # ---------------------------------------------------------------------------
+  backend:
+    runs-on: ubuntu-latest
+
+    # Service containers run in the background. In GitHub Actions, their ports are
+    # forwarded to the runner host so they are reached at 127.0.0.1, unlike Docker Compose
+    # where services communicate over a bridge network by service name.
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: flowsync_test
+          MYSQL_USER: flowsync
+          MYSQL_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: password
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+
+      redis:
+        image: redis:alpine
+        ports:
+          - 6379:6379
+        options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=5
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Set up PHP 8.5 with all required extensions matching docker/php/Dockerfile
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: pdo_mysql, redis, intl, bcmath, pcntl, zip
+          tools: composer:v2
+          coverage: none
+
+      # Cache vendor directory to speed up subsequent CI runs
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: backend/vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('backend/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Copy .env.example
+        run: cp .env.example .env
+
+      # Configure database and redis connection parameters for the CI runner environment (127.0.0.1)
+      - name: Configure environment for CI
+        run: |
+          sed -i 's/^DB_HOST=.*/DB_HOST=127.0.0.1/' .env
+          sed -i 's/^DB_DATABASE=.*/DB_DATABASE=flowsync_test/' .env
+          sed -i 's/^DB_USERNAME=.*/DB_USERNAME=flowsync/' .env
+          sed -i 's/^DB_PASSWORD=.*/DB_PASSWORD=password/' .env
+          sed -i 's/^REDIS_HOST=.*/REDIS_HOST=127.0.0.1/' .env
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-interaction --optimize-autoloader
+
+      - name: Generate application key
+        run: php artisan key:generate
+
+      # Required by MySQL for stored triggers and functions (e.g., immutability triggers in database-design §16.6)
+      - name: Enable log_bin_trust_function_creators in MySQL
+        run: mysql -h 127.0.0.1 -u root -ppassword -e "SET GLOBAL log_bin_trust_function_creators = 1;"
+
+      # Pint code style check (fails if formatting does not follow the preset)
+      - name: Run linter (Pint)
+        run: composer lint
+
+      # Larastan level 6 static type analysis
+      - name: Run static analysis (Larastan)
+        run: composer analyse
+
+      # Pest test suite against flowsync_test database
+      - name: Run tests (Pest)
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: flowsync_test
+          DB_USERNAME: flowsync
+          DB_PASSWORD: password
+          REDIS_HOST: 127.0.0.1
+        run: vendor/bin/pest
+
+  # ---------------------------------------------------------------------------
+  # Frontend Job: Tests React + Vite app, ESLint, TypeScript, and Vitest
+  # ---------------------------------------------------------------------------
+  frontend:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Uses Node 26 LTS matching compose.yaml frontend service
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 26
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # ESLint code style and quality check
+      - name: Run linter
+        run: npm run lint
+
+      # TypeScript typecheck across project references (tsc -b)
+      - name: Run typecheck
+        run: npm run typecheck
+
+      # Vitest test suite (runs once via vitest run)
+      - name: Run tests
+        run: npm run test
