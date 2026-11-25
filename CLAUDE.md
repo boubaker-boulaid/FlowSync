@@ -58,3 +58,10 @@ feat(frontend): set up Vitest and add the first component test
 ## Output style
 
 Keep all output well formatted and organized: clear headings, short paragraphs, concise bullets, and code blocks where helpful, so it is easy to understand and read.
+
+## Code blocks in responses
+
+- Always use fenced code blocks with an explicit language tag (for example `php`, `bash`, `json`). Do not use ANSI escape codes; they render unevenly in this CLI.
+- Syntax highlighting and the dark background are controlled by the renderer; the language tag is the only hint provided in the markdown.
+- Add short inline comments explaining complex or non-obvious lines in code examples.
+- This rule applies only to code shown in responses; repository files must still avoid comments unless explicitly requested.
