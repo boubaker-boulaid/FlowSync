@@ -55,6 +55,8 @@ feat(frontend): set up Vitest and add the first component test
 - add App.test.tsx verifying the app renders the landing component
 ```
 
+**Never mention planning/internal doc references in commit messages** (e.g. `API §3`, `database design §…`, story/roadmap IDs). Planning docs are not in GitHub; commits are read by others who won’t have them. Describe the change and behavior instead.
+
 ## Pull request descriptions
 
 Every PR description must follow this structure:
@@ -80,6 +82,12 @@ Every PR description must follow this structure:
 - Write for someone who has never seen the local planning documents; never use internal IDs such as story numbers or document section references.
 - Include verification commands and results in Acceptance Criteria when useful.
 - Keep the title in Conventional Commits format.
+
+## Code comments
+
+- When writing complex or non-obvious code in repository files, always add short comments explaining why the code is written that way.
+- Keep comments brief and focused on intent; do not restate what the code already says.
+- **Never reference planning/internal docs in comments** (e.g. `API §3`, `database design §…`). Explain the rule or intent directly in plain language; the docs live locally and are not in the repo.
 
 ## Output style
 
