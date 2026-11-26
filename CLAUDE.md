@@ -55,6 +55,32 @@ feat(frontend): set up Vitest and add the first component test
 - add App.test.tsx verifying the app renders the landing component
 ```
 
+## Pull request descriptions
+
+Every PR description must follow this structure:
+
+```markdown
+## Summary
+
+<what changed and why, in short paragraphs>
+
+## Changes
+
+### <area>
+
+- <specific change with exact paths and behaviour>
+- <specific change with exact paths and behaviour>
+
+## Acceptance Criteria
+
+- [x] <criterion>
+- [ ] <criterion>
+```
+
+- Write for someone who has never seen the local planning documents; never use internal IDs such as story numbers or document section references.
+- Include verification commands and results in Acceptance Criteria when useful.
+- Keep the title in Conventional Commits format.
+
 ## Output style
 
 Keep all output well formatted and organized: clear headings, short paragraphs, concise bullets, and code blocks where helpful, so it is easy to understand and read.
@@ -64,4 +90,9 @@ Keep all output well formatted and organized: clear headings, short paragraphs, 
 - Always use fenced code blocks with an explicit language tag (for example `php`, `bash`, `json`). Do not use ANSI escape codes; they render unevenly in this CLI.
 - Syntax highlighting and the dark background are controlled by the renderer; the language tag is the only hint provided in the markdown.
 - Add short inline comments explaining complex or non-obvious lines in code examples.
-- This rule applies only to code shown in responses; repository files must still avoid comments unless explicitly requested.
+- This rule applies to code shown in responses; repository files follow the code comments rule below.
+
+## Code comments
+
+- When writing complex or non-obvious code in repository files, always add short comments explaining why the code is written that way.
+- Keep comments brief and focused on intent; do not restate what the code already says.
