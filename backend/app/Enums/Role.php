@@ -11,7 +11,7 @@ enum Role: string
     case Viewer = 'viewer';
 
     /**
-     * Whether this workspace role grants the given permission (API §3 matrix).
+     * Whether this workspace role grants the given permission.
      */
     public function can(Permission $permission): bool
     {
