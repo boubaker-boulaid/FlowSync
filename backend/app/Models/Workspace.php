@@ -41,8 +41,8 @@ class Workspace extends Model
      * @return BelongsToMany<User, $this, Member>
      */
     public function users(): BelongsToMany
-    { 
-        return $this->belongsToMany(User::class, 'workspace_user')->using(Member::class);;
+    {
+        return $this->belongsToMany(User::class, 'workspace_user')->using(Member::class);
     }
 
     /**
